@@ -1,16 +1,16 @@
 /**
- * An annoying server listening on port 6008. 
+ * Server class for the homework 4 chat app.
  *
- * @author - Greg Gagne.
+ * @author Josh Trujillo
  */
 
 import java.net.*;
 import java.io.*;
 import java.util.concurrent.*;
 
-public class  AnnoyingServer
+public class  Server
 {
-	public static final int DEFAULT_PORT = 6008;
+	public static final int DEFAULT_PORT = 8888;
 
 	// construct a thread pool for concurrency	
 	private static final Executor exec = Executors.newCachedThreadPool();

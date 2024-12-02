@@ -4,7 +4,7 @@ import java.io.*;
 public class Handler 
 {
 
-	/**
+	/*
 	 * this method is invoked by a separate thread
 	 */
 	public void process(Socket client) throws java.io.IOException {
