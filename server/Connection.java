@@ -1,13 +1,16 @@
 import java.net.*;
 import java.io.*;
+import java.util.ArrayList;
 
 public class Connection implements Runnable
 {
 	private Socket	client;
+    private ArrayList<BufferedWriter> bufferedWriterList;
 	private static Handler handler = new Handler();
 
-	public Connection(Socket client) {
+	public Connection(ArrayList<BufferedWriter> bufferedWriterList, Socket client) {
 		this.client = client;
+        this.bufferedWriterList = bufferedWriterList;
 	}
 
 	/**
