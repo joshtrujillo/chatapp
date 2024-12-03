@@ -7,6 +7,7 @@
 import java.net.*;
 import java.io.*;
 import java.util.concurrent.*;
+import java.util.ArrayList;
 
 public class  Server
 {
@@ -27,7 +28,11 @@ public class  Server
 				 * now listen for connections
 				 * and service the connection in a separate thread.
 				 */
-				Runnable task = new Connection(sock.accept());
+                // ArrayList
+                ArrayList<BufferedWriter> BufferedWriterList = new ArrayList<BufferedWriter>();
+
+                
+				Runnable task = new Connection(BufferedWriterList, sock.accept());
 				exec.execute(task);
 			}
 		}
