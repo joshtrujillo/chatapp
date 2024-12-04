@@ -1,16 +1,16 @@
 import java.net.*;
 import java.io.*;
-import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Connection implements Runnable
 {
 	private Socket	client;
-    private ArrayList<BufferedWriter> bufferedWriterList;
+    private ConcurrentHashMap<Socket, DataOutputStream> socketMap;
 	private static Handler handler = new Handler();
 
-	public Connection(ArrayList<BufferedWriter> bufferedWriterList, Socket client) {
+	public Connection(ConcurrentHashMap<Socket, DataOutputStream> socketMap, Socket client) {
 		this.client = client;
-        this.bufferedWriterList = bufferedWriterList;
+        this.socketMap = socketMap;
 	}
 
 	/**
@@ -18,7 +18,7 @@ public class Connection implements Runnable
 	 */	
 	public void run() { 
 		try {
-			handler.process(client);
+			handler.process(socketMap, client);
 		}
 		catch (java.io.IOException ioe) {
 			System.err.println(ioe);
