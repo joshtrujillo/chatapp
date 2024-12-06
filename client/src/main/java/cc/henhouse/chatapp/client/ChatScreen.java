@@ -8,7 +8,6 @@ import java.net.*;
 import java.util.regex.Pattern;
 
 import javax.swing.*;
-import javax.swing.border.*;
 
 public class ChatScreen extends JFrame implements ActionListener, KeyListener {
     private JButton sendButton, exitButton, viewUsersButton;
