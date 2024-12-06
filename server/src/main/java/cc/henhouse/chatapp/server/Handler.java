@@ -20,12 +20,14 @@ public class Handler {
 
         try {
             toClient = new DataOutputStream(client.getOutputStream());
-            fromClient = new BufferedReader(new InputStreamReader(client.getInputStream()));
+            fromClient =
+                    new BufferedReader(new InputStreamReader(client.getInputStream(), "UTF-8"));
 
             // Handle join request
             String line = fromClient.readLine();
             String[] parts = line.split("¤");
             if (!parts[0].equals("Join") || parts.length < 2) {
+
                 toClient.writeBytes("ERR¤Join¤Invalid join request\n");
                 return;
             }
