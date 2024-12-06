@@ -1,21 +1,24 @@
-import java.net.*;
 import java.io.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.net.*;
 import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
 
-public class Handler 
-{
-	/*
-	 * this method is invoked by a separate thread
-	 */
-	public void process(Vector<String[]> messageList, ConcurrentHashMap<String, DataOutputStream> userMap, Socket client) throws java.io.IOException {
-		DataOutputStream toClient = null;
+public class Handler {
+    /*
+     * this method is invoked by a separate thread
+     */
+    public void process(
+            Vector<String[]> messageList,
+            ConcurrentHashMap<String, DataOutputStream> userMap,
+            Socket client)
+            throws java.io.IOException {
+        DataOutputStream toClient = null;
         BufferedReader fromClient = null;
         String username = null;
 
-		try {
-			toClient = new DataOutputStream(client.getOutputStream());
-			fromClient = new BufferedReader(new InputStreamReader (client.getInputStream()));
+        try {
+            toClient = new DataOutputStream(client.getOutputStream());
+            fromClient = new BufferedReader(new InputStreamReader(client.getInputStream()));
 
             // Check for unique username on client connection
             String line = fromClient.readLine();
@@ -24,7 +27,8 @@ public class Handler
                 String error = "ERR¤Join¤Non unique username\n";
                 toClient.writeBytes(error);
                 toClient.close();
-            };
+            }
+            ;
 
             username = parts[1];
 
@@ -33,7 +37,7 @@ public class Handler
             System.out.println("Client Connected!");
             System.out.println("Added socket and DataOutputStream to HashMap!");
 
-			while (true) {
+            while (true) {
                 line = fromClient.readLine();
                 parts = line.split("¤");
                 switch (parts[0]) {
@@ -41,28 +45,24 @@ public class Handler
                         messageList.add(new String[] {username, parts[1]});
                         break;
                     case "MessageIndividual":
-                        //TODO
+                        // TODO
                         break;
                     case "viewOnlineUsers":
-                        //TODO
+                        // TODO
                         break;
                     case "Leave":
-                        //TODO
+                        // TODO
                         break;
                     default:
-                        //TODO
-                        //send error with type Method.
+                        // TODO
+                        // send error with type Method.
                 }
-
             }
+        } catch (IOException ioe) {
+            System.err.println(ioe);
+        } finally {
+            // close streams and socket
+            if (toClient != null) toClient.close();
         }
-		catch (IOException ioe) {
-			System.err.println(ioe);
-		}
-		finally {
-			// close streams and socket
-			if (toClient != null)
-				toClient.close();
-		}
-	}
+    }
 }
