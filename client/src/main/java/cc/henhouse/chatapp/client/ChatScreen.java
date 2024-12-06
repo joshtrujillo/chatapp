@@ -114,15 +114,11 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener {
     /* This gets the text the user entered and outputs it in the display area. */
     public void displayText() {
         String message = sendText.getText().trim();
-        StringBuffer buffer = new StringBuffer(message.length());
 
-        // now reverse it
-        for (int i = message.length() - 1; i >= 0; i--) buffer.append(message.charAt(i));
-
-        displayArea.append(buffer.toString() + "\n");
+        displayArea.append(message + "\n");
 
         sendText.setText("");
-        sendText.requestFocus();
+        sendText.requestFocusInWindow();
     }
 
     public void sendMessageAll(String message) {
@@ -148,8 +144,24 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener {
     public void actionPerformed(ActionEvent evt) {
         Object source = evt.getSource();
 
-        if (source == sendButton) displayText();
-        else if (source == exitButton) System.exit(0);
+        if (source == sendButton) {
+            String message = sendText.getText().trim();
+            String recipient = recipientText.getText().trim();
+
+            if (recipient.isEmpty()) {
+                sendMessageAll(message);
+            } else {
+                sendPrivateMessage(recipient, message);
+            }
+
+            sendText.setText("");
+
+        } else if (source == viewUsersButton) {
+            viewOnlineUsers();
+        } else if (source == exitButton) {
+            sendLeaveMessage();
+            System.exit(0);
+        }
     }
 
     public void viewOnlineUsers() {
@@ -167,7 +179,9 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener {
                 return;
             }
 
-            toServer.writeBytes("Join¤" + username + "\n");
+            // toServer.writeBytes("Join¤" + username + "\n");
+            String message = "Join¤" + username + "\n";
+            toServer.write(message.getBytes("UTF-8"));
         } catch (IOException ioe) {
             displayMessage("[Error] Could not join: " + ioe.getMessage());
         }
