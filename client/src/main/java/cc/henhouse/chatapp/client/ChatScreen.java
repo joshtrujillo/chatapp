@@ -201,7 +201,6 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener {
         try {
             Socket server = new Socket(args[0], PORT);
             ChatScreen win = new ChatScreen(server);
-            win.displayMessage("My name is " + args[1]);
 
             String username = JOptionPane.showInputDialog(win, "Enter your username:");
             if (username != null) {
