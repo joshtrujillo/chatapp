@@ -11,6 +11,7 @@ public class Handler
 	public void process(Vector<String[]> messageList, ConcurrentHashMap<String, DataOutputStream> userMap, Socket client) throws java.io.IOException {
 		DataOutputStream toClient = null;
         BufferedReader fromClient = null;
+        String username = null;
 
 		try {
 			toClient = new DataOutputStream(client.getOutputStream());
@@ -25,7 +26,9 @@ public class Handler
                 toClient.close();
             };
 
-            userMap.put(parts[1], toClient);
+            username = parts[1];
+
+            userMap.put(username, toClient);
             // Add OK response?
             System.out.println("Client Connected!");
             System.out.println("Added socket and DataOutputStream to HashMap!");
@@ -35,8 +38,7 @@ public class Handler
                 parts = line.split("¤");
                 switch (parts[0]) {
                     case "MessageAll":
-                        //TODO
-                        
+                        messageList.add(new String[] {username, parts[1]});
                         break;
                     case "MessageIndividual":
                         //TODO

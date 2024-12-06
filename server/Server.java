@@ -9,7 +9,7 @@ import java.io.*;
 import java.util.concurrent.*;
 import java.util.Vector;
 
-public class  Server
+public class Server
 {
 	public static final int DEFAULT_PORT = 8888;
 
