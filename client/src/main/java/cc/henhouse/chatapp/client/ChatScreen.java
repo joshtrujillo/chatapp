@@ -93,6 +93,20 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener {
         return true;
     }
 
+    public void handleInvalidUsername() {
+        SwingUtilities.invokeLater(
+                () -> {
+                    String newUsername =
+                            JOptionPane.showInputDialog(
+                                    this, "Username already taken. Enter a new username: ");
+                    if (newUsername != null) {
+                        sendJoinMessage(newUsername.trim());
+                    } else {
+                        System.exit(0);
+                    }
+                });
+    }
+
     /* Displays a message */
     public void displayMessage(String message) {
         displayArea.append(message + "\n");
@@ -147,7 +161,18 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener {
         }
     }
 
-    public void sendJoinMessage(String username) {}
+    public void sendJoinMessage(String username) {
+        try {
+            if (!validateUsername(username)) {
+                handleInvalidUsername();
+                return;
+            }
+
+            toServer.writeBytes("Join¤" + username + "\n");
+        } catch (IOException ioe) {
+            displayMessage("[Error] Could not join: " + ioe.getMessage());
+        }
+    }
 
     /*
      * These methods responds to keystroke events and fulfills the contract of the KeyListener
@@ -168,16 +193,22 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener {
     public static void main(String[] args) {
         try {
             Socket server = new Socket(args[0], PORT);
-            ChatScreen win = new ChatScreen();
+            ChatScreen win = new ChatScreen(server);
             win.displayMessage("My name is " + args[1]);
 
-            Thread ReaderThread = new Thread(new ReaderThread(server, win));
+            String username = JOptionPane.showInputDialog(win, "Enter your username:");
+            if (username != null) {
+                win.sendJoinMessage(username.trim());
+            } else {
+                System.exit(0); // Exit if no username is provided
+            }
 
-            ReaderThread.start();
+            Thread readerThread = new Thread(new ReaderThread(server, win));
+            readerThread.start();
         } catch (UnknownHostException uhe) {
-            System.out.println(uhe);
+            System.err.println("[Error] Unable to connect: " + uhe.getMessage());
         } catch (IOException ioe) {
-            System.out.println(ioe);
+            System.err.println("[Error] Unable to connect: " + ioe.getMessage());
         }
     }
 }

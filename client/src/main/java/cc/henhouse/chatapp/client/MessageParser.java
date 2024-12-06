@@ -25,6 +25,9 @@ public class MessageParser {
 
             case "ERR":
                 screen.displayMessage("[Error] " + parts[1] + ": " + parts[2]);
+                if (parts[1].equals("Join")) {
+                    screen.handleInvalidUsername();
+                }
                 break;
 
             default:
