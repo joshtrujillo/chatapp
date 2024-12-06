@@ -18,6 +18,7 @@ import java.io.*;
 import java.net.*;
 
 
+
 public class ChatScreen extends JFrame implements ActionListener, KeyListener
 {
 	private JButton sendButton;
@@ -152,7 +153,7 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener
 	/** Not implemented */
 	public void keyTyped(KeyEvent e) {  }
 
-    public Collection<String> getOnlineUsers(Socket server) {
+    public ArrayList<String> getOnlineUsers(Socket server) {
         try {
             
         }

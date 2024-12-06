@@ -4,7 +4,7 @@ plugins {
 }
 
 application {
-    mainClass = 'cc.henhouse.homework4.client.ChatScreen'
+    mainClass = 'cc.henhouse.chatapp.client.ChatScreen'
 }
 
 dependencies {

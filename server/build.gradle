@@ -4,7 +4,7 @@ plugins {
 }
 
 application {
-    mainClass = 'cc.henhouse.homework4.server.Server'
+    mainClass = 'cc.henhouse.chatapp.server.Server'
 }
 
 dependencies {
