@@ -76,7 +76,7 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener {
         addWindowListener(
                 new WindowAdapter() {
                     public void windowClosing(WindowEvent evt) {
-                        sendLeaveMessage();
+                        ChatScreen.this.sendLeaveMessage();
                         System.exit(0);
                     }
                 });
@@ -171,6 +171,14 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener {
             toServer.writeBytes("Join¤" + username + "\n");
         } catch (IOException ioe) {
             displayMessage("[Error] Could not join: " + ioe.getMessage());
+        }
+    }
+
+    public void sendLeaveMessage() {
+        try {
+            toServer.writeBytes("Leave¤\n");
+        } catch (IOException ioe) {
+            displayMessage("[Error] Could not leave: " + ioe.getMessage());
         }
     }
 
