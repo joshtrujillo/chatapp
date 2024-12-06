@@ -2,10 +2,10 @@
  * This thread is passed a socket that it reads from. Whenever it gets input it writes it to the
  * ChatScreen text area using the displayMessage() method.
  */
+package cc.henhouse.chatapp.client;
+
 import java.io.*;
 import java.net.*;
-
-import javax.swing.*;
 
 public class ReaderThread implements Runnable {
     Socket server;
@@ -23,12 +23,12 @@ public class ReaderThread implements Runnable {
 
             while (true) {
                 String message = fromServer.readLine();
+                if (message == null) break;
 
-                // now display it on the display area
-                screen.displayMessage(message);
+                MessageParser.handleMessage(message, screen);
             }
         } catch (IOException ioe) {
-            System.out.println(ioe);
+            screen.displayMessage("[Error] Connection lost: " + ioe);
         }
     }
 }
