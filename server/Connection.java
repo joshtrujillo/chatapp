@@ -7,10 +7,10 @@ public class Connection implements Runnable
 {
 	private Socket	client;
     private ConcurrentHashMap<String, DataOutputStream> userMap;
-    private Vector<String> messageList;
+    private Vector<String[]> messageList;
 	private static Handler handler = new Handler();
 
-	public Connection(Vector<String> messageList, ConcurrentHashMap<String, DataOutputStream> userMap, Socket client) {
+	public Connection(Vector<String[]> messageList, ConcurrentHashMap<String, DataOutputStream> userMap, Socket client) {
 		this.client = client;
         this.userMap = userMap;
         this.messageList = messageList;

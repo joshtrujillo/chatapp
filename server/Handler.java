@@ -8,7 +8,7 @@ public class Handler
 	/*
 	 * this method is invoked by a separate thread
 	 */
-	public void process(Vector<String> messageList, ConcurrentHashMap<String, DataOutputStream> userMap, Socket client) throws java.io.IOException {
+	public void process(Vector<String[]> messageList, ConcurrentHashMap<String, DataOutputStream> userMap, Socket client) throws java.io.IOException {
 		DataOutputStream toClient = null;
         BufferedReader fromClient = null;
 
@@ -26,11 +26,31 @@ public class Handler
             };
 
             userMap.put(parts[1], toClient);
+            // Add OK response?
             System.out.println("Client Connected!");
             System.out.println("Added socket and DataOutputStream to HashMap!");
 
 			while (true) {
                 line = fromClient.readLine();
+                parts = line.split("¤");
+                switch (parts[0]) {
+                    case "MessageAll":
+                        //TODO
+                        
+                        break;
+                    case "MessageIndividual":
+                        //TODO
+                        break;
+                    case "viewOnlineUsers":
+                        //TODO
+                        break;
+                    case "Leave":
+                        //TODO
+                        break;
+                    default:
+                        //TODO
+                        //send error with type Method.
+                }
 
             }
         }

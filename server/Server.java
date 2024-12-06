@@ -29,7 +29,7 @@ public class  Server
 				 * and service the connection in a separate thread.
 				 */
                 ConcurrentHashMap<String, DataOutputStream> userMap = new ConcurrentHashMap<>();
-                Vector<String> messageList = new Vector<>();
+                Vector<String[]> messageList = new Vector<>();
 
                 
 				Runnable task = new Connection(messageList, userMap, sock.accept());
