@@ -3,6 +3,8 @@
  *
  * @author Josh Trujillo
  */
+package cc.henhouse.chatapp.server;
+
 import java.io.*;
 import java.net.*;
 import java.util.Vector;
