@@ -1,3 +1,5 @@
+package cc.henhouse.chatapp.server;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Vector;
@@ -27,11 +29,11 @@ public class BroadcastThread implements Runnable {
                 String protocolMessage =
                         String.format("MessageAll¤%s¤%s\n", message[0], message[1]);
                 for (String username : userMap.keySet()) {
-                    // Skip sending the broadcast message to the original sender.
-                    if (username.equals(message[0])) continue;
+                    if (username.equals(message[0])) continue; // skip sender
                     try {
                         userMap.get(username).writeBytes(protocolMessage);
                     } catch (IOException ioe) {
+                        System.err.println("Error sending message to " + username);
                     }
                 }
                 messageList.remove(message);

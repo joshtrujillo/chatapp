@@ -1,3 +1,5 @@
+package cc.henhouse.chatapp.server;
+
 import java.io.*;
 import java.net.*;
 import java.util.Vector;
@@ -20,21 +22,22 @@ public class Handler {
             toClient = new DataOutputStream(client.getOutputStream());
             fromClient = new BufferedReader(new InputStreamReader(client.getInputStream()));
 
-            // Check for unique username on client connection
+            // Handle join request
             String line = fromClient.readLine();
             String[] parts = line.split("¤");
-            if (userMap.containsKey(parts[1])) {
-                String error = "ERR¤Join¤Non unique username\n";
-                toClient.writeBytes(error);
-                toClient.close();
+            if (!parts[0].equals("Join") || parts.length < 2) {
+                toClient.writeBytes("ERR¤Join¤Invalid join request\n");
+                return;
             }
 
             username = parts[1];
+            if (userMap.containsKey(username)) {
+                toClient.writeBytes("ERR¤Join¤Username is not unique");
+                return;
+            }
 
             userMap.put(username, toClient);
-            // Add OK response?
-            System.out.println("Client Connected!");
-            System.out.println("Added socket and DataOutputStream to HashMap!");
+            broadcastMessage(messageList, "Join", username + " has joined the chat!");
 
             while (true) {
                 line = fromClient.readLine();
@@ -43,18 +46,22 @@ public class Handler {
                     case "MessageAll":
                         messageList.add(new String[] {username, parts[1]});
                         break;
+
                     case "MessageIndividual":
-                        // TODO
+                        sendPrivateMessage(userMap, parts[1], username, parts[2]);
                         break;
+
                     case "viewOnlineUsers":
-                        // TODO
+                        sendOnlineUsers(username, userMap);
                         break;
+
                     case "Leave":
-                        // TODO
+                        userMap.remove(username);
+                        broadcastMessage(messageList, "Leave", username + " has left the chat.");
                         break;
+
                     default:
-                        // TODO
-                        // send error with type Method.
+                        toClient.writeBytes("ERR¤Method¤Unsupported command\n");
                 }
             }
         } catch (IOException ioe) {
@@ -63,5 +70,29 @@ public class Handler {
             // close streams and socket
             if (toClient != null) toClient.close();
         }
+    }
+
+    private void broadcastMessage(Vector<String[]> messageList, String type, String message) {
+        messageList.add(new String[] {type, message});
+    }
+
+    private void sendPrivateMessage(
+            ConcurrentHashMap<String, DataOutputStream> userMap,
+            String recipient,
+            String sender,
+            String message)
+            throws IOException {
+        if (userMap.containsKey(recipient)) {
+            userMap.get(recipient).writeBytes("MessageIndividual¤" + sender + "¤" + message + "\n");
+        } else {
+            userMap.get(sender).writeBytes("ERR¤Message¤User " + recipient + " not found\n");
+        }
+    }
+
+    private void sendOnlineUsers(
+            String username, ConcurrentHashMap<String, DataOutputStream> userMap)
+            throws IOException {
+        String users = String.join(",", userMap.keySet());
+        userMap.get(username).writeBytes("OnlineUsers¤" + users + "\n");
     }
 }
