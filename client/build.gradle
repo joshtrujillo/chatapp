@@ -1,0 +1,14 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+application {
+    mainClass = 'cc.henhouse.homework4.client.ChatScreen'
+}
+
+dependencies {
+    // Add any required dependencies here
+    // testImplementation 'org.junit.jupiter:junit-jupiter:5.9.3'
+}
+
