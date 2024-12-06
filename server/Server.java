@@ -7,6 +7,7 @@
 import java.net.*;
 import java.io.*;
 import java.util.concurrent.*;
+import java.util.Vector;
 
 public class  Server
 {
@@ -27,10 +28,11 @@ public class  Server
 				 * now listen for connections
 				 * and service the connection in a separate thread.
 				 */
-                ConcurrentHashMap<Socket, DataOutputStream> socketMap = new ConcurrentHashMap<>();
+                ConcurrentHashMap<String, DataOutputStream> userMap = new ConcurrentHashMap<>();
+                Vector<String> messageList = new Vector<>();
 
                 
-				Runnable task = new Connection(socketMap, sock.accept());
+				Runnable task = new Connection(messageList, userMap, sock.accept());
 				exec.execute(task);
 			}
 		}

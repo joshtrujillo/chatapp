@@ -152,6 +152,12 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener
 	/** Not implemented */
 	public void keyTyped(KeyEvent e) {  }
 
+    public Collection<String> getOnlineUsers(Socket server) {
+        try {
+            
+        }
+    }
+
 
 	public static void main(String[] args) {
 		try {

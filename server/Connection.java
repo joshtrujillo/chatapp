@@ -1,16 +1,19 @@
 import java.net.*;
 import java.io.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.Vector;
 
 public class Connection implements Runnable
 {
 	private Socket	client;
-    private ConcurrentHashMap<Socket, DataOutputStream> socketMap;
+    private ConcurrentHashMap<String, DataOutputStream> userMap;
+    private Vector<String> messageList;
 	private static Handler handler = new Handler();
 
-	public Connection(ConcurrentHashMap<Socket, DataOutputStream> socketMap, Socket client) {
+	public Connection(Vector<String> messageList, ConcurrentHashMap<String, DataOutputStream> userMap, Socket client) {
 		this.client = client;
-        this.socketMap = socketMap;
+        this.userMap = userMap;
+        this.messageList = messageList;
 	}
 
 	/**
@@ -18,7 +21,7 @@ public class Connection implements Runnable
 	 */	
 	public void run() { 
 		try {
-			handler.process(socketMap, client);
+			handler.process(messageList, userMap, client);
 		}
 		catch (java.io.IOException ioe) {
 			System.err.println(ioe);
