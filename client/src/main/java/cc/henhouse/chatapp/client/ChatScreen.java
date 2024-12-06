@@ -14,6 +14,7 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener {
     private JTextField sendText, recipientText;
     private JTextArea displayArea;
     private DataOutputStream toServer;
+    private String username;
 
     public static final int PORT = 8888;
 
@@ -21,12 +22,6 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener {
         /* a panel used for placing components */
         JPanel inputPanel = new JPanel();
         JPanel controlPanel = new JPanel();
-
-        /*
-        Border etched = BorderFactory.createEtchedBorder();
-        Border titled = BorderFactory.createTitledBorder(etched, "Enter Message Here ...");
-        p.setBorder(titled);
-        */
 
         /* set up all the components */
         sendText = new JTextField(30);
@@ -39,6 +34,7 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener {
         sendText.addKeyListener(this);
         sendButton.addActionListener(this);
         exitButton.addActionListener(this);
+        viewUsersButton.addActionListener(this);
 
         /* add the components to the input panel */
         inputPanel.add(new JLabel("Message: "));
@@ -82,6 +78,10 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener {
         toServer = new DataOutputStream(server.getOutputStream());
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     private boolean validateUsername(String username) {
         String usernameRegex = "^[a-zA-Z0-9_]+$";
         if (!Pattern.matches(usernameRegex, username)) {
@@ -121,9 +121,25 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener {
         sendText.requestFocusInWindow();
     }
 
+    private void sendMessage() {
+        String message = sendText.getText().trim();
+        String recipient = recipientText.getText().trim();
+
+        if (recipient.isEmpty()) {
+            sendMessageAll(message);
+        } else {
+            sendPrivateMessage(recipient, message);
+        }
+
+        sendText.setText("");
+        sendText.requestFocusInWindow();
+    }
+
     public void sendMessageAll(String message) {
         try {
-            toServer.writeBytes("MessageAll¤" + message + "\n");
+            String request = "MessageAll¤" + message + "\n";
+            toServer.write(request.getBytes("UTF-8"));
+            displayMessage(username + ": " + message);
         } catch (IOException ioe) {
             displayMessage("[Error] Could not send message: " + ioe.getMessage());
         }
@@ -131,42 +147,18 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener {
 
     public void sendPrivateMessage(String recipient, String message) {
         try {
-            toServer.writeBytes("MessageIndividual¤" + recipient + "¤" + message + "\n");
+            String request = "MessageIndivdual¤" + recipient + "¤" + message + "\n";
+            toServer.write(request.getBytes("UTF-8"));
+            displayMessage("[To " + recipient + "] " + username + ": " + message);
         } catch (IOException ioe) {
             displayMessage("[Error] Could not send message: " + ioe.getMessage());
         }
     }
 
-    /*
-     * This method responds to action events .... i.e. button clicks and fulfills the contract of
-     * the ActionListener interface.
-     */
-    public void actionPerformed(ActionEvent evt) {
-        Object source = evt.getSource();
-
-        if (source == sendButton) {
-            String message = sendText.getText().trim();
-            String recipient = recipientText.getText().trim();
-
-            if (recipient.isEmpty()) {
-                sendMessageAll(message);
-            } else {
-                sendPrivateMessage(recipient, message);
-            }
-
-            sendText.setText("");
-
-        } else if (source == viewUsersButton) {
-            viewOnlineUsers();
-        } else if (source == exitButton) {
-            sendLeaveMessage();
-            System.exit(0);
-        }
-    }
-
     public void viewOnlineUsers() {
         try {
-            toServer.writeBytes("viewOnlineUsers¤\n");
+            String request = "viewOnlineUsers¤\n";
+            toServer.write(request.getBytes("UTF-8"));
         } catch (IOException ioe) {
             displayMessage("[Error] Could not view users: " + ioe.getMessage());
         }
@@ -178,10 +170,8 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener {
                 handleInvalidUsername();
                 return;
             }
-
-            // toServer.writeBytes("Join¤" + username + "\n");
-            String message = "Join¤" + username + "\n";
-            toServer.write(message.getBytes("UTF-8"));
+            String request = "Join¤" + username + "\n";
+            toServer.write(request.getBytes("UTF-8"));
         } catch (IOException ioe) {
             displayMessage("[Error] Could not join: " + ioe.getMessage());
         }
@@ -189,9 +179,27 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener {
 
     public void sendLeaveMessage() {
         try {
-            toServer.writeBytes("Leave¤\n");
+            String request = "Leave¤\n";
+            toServer.write(request.getBytes("UTF-8"));
         } catch (IOException ioe) {
             displayMessage("[Error] Could not leave: " + ioe.getMessage());
+        }
+    }
+
+    /*
+     * This method responds to action events .... i.e. button clicks and fulfills the contract of
+     * the ActionListener interface.
+     */
+    public void actionPerformed(ActionEvent evt) {
+        Object source = evt.getSource();
+
+        if (source == sendButton) {
+            sendMessage();
+        } else if (source == viewUsersButton) {
+            viewOnlineUsers();
+        } else if (source == exitButton) {
+            sendLeaveMessage();
+            System.exit(0);
         }
     }
 
@@ -202,7 +210,7 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener {
 
     /* This is invoked when the user presses the ENTER key. */
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_ENTER) displayText();
+        if (e.getKeyCode() == KeyEvent.VK_ENTER) sendMessage();
     }
 
     /* Not implemented */
@@ -219,6 +227,7 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener {
             String username = JOptionPane.showInputDialog(win, "Enter your username:");
             if (username != null) {
                 win.sendJoinMessage(username.trim());
+                win.displayMessage("Hello " + username + "!\n");
             } else {
                 System.exit(0); // Exit if no username is provided
             }
