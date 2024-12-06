@@ -28,7 +28,6 @@ public class Handler {
                 toClient.writeBytes(error);
                 toClient.close();
             }
-            ;
 
             username = parts[1];
 
