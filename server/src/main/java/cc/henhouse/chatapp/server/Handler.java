@@ -93,7 +93,7 @@ public class Handler {
             userMap.get(recipient).write(response.getBytes("UTF-8"));
         } else {
             String response = "ERR¤Message¤User " + recipient + " not found\n";
-            userMap.get(recipient).write(response.getBytes("UTF-8"));
+            userMap.get(sender).write(response.getBytes("UTF-8"));
         }
     }
 
