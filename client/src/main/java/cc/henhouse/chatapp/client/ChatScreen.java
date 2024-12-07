@@ -183,7 +183,7 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener {
 
     public void sendLeaveMessage() {
         try {
-            String request = "Leave¤\n";
+            String request = "Leave\n";
             toServer.write(request.getBytes("UTF-8"));
         } catch (IOException ioe) {
             displayMessage("[Error] Could not leave: " + ioe.getMessage());
