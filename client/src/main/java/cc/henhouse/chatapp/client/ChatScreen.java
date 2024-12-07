@@ -147,9 +147,13 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener {
 
     public void sendPrivateMessage(String recipient, String message) {
         try {
-            String request = "MessageIndividual¤" + recipient + "¤" + message + "\n";
-            toServer.write(request.getBytes("UTF-8"));
-            displayMessage("[To " + recipient + "] " + username + ": " + message);
+            if (!message.isEmpty()) {
+                String request = "MessageIndividual¤" + recipient + "¤" + message + "\n";
+                toServer.write(request.getBytes("UTF-8"));
+                displayMessage("[To " + recipient + "] " + username + ": " + message);
+            } else {
+                displayMessage("[Error] Type message to send first.");
+            }
         } catch (IOException ioe) {
             displayMessage("[Error] Could not send message: " + ioe.getMessage());
         }
@@ -228,7 +232,8 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener {
             if (username != null) {
                 win.setUsername(username.trim());
                 win.sendJoinMessage(username.trim());
-                win.displayMessage("Hello " + username.trim() + "!\n");
+                win.displayMessage("Welcome " + username.trim() + "\n");
+                win.viewOnlineUsers();
             } else {
                 System.exit(0); // Exit if no username is provided
             }
