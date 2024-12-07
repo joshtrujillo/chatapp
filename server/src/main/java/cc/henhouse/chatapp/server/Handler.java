@@ -22,7 +22,6 @@ public class Handler {
             toClient = new DataOutputStream(client.getOutputStream());
             fromClient =
                     new BufferedReader(new InputStreamReader(client.getInputStream(), "UTF-8"));
-
             // Handle join request
             String line = fromClient.readLine();
             String[] parts = line.split("¤");
@@ -31,14 +30,12 @@ public class Handler {
                 toClient.write(response.getBytes("UTF-8"));
                 return;
             }
-
             username = parts[1];
             if (userMap.containsKey(username)) {
                 String response = "ERR¤Join¤Username is not unique";
                 toClient.write(response.getBytes("UTF-8"));
                 return;
             }
-
             userMap.put(username, toClient);
             broadcastMessage(messageList, "Server", username + " has joined the chat!");
 
@@ -51,20 +48,16 @@ public class Handler {
                     case "MessageAll":
                         broadcastMessage(messageList, username, parts[1]);
                         break;
-
                     case "MessageIndividual":
                         sendPrivateMessage(userMap, parts[1], username, parts[2]);
                         break;
-
                     case "viewOnlineUsers":
                         sendOnlineUsers(username, userMap);
                         break;
-
                     case "Leave":
                         userMap.remove(username);
                         broadcastMessage(messageList, "Server", username + " has left the chat.");
                         break;
-
                     default:
                         String response = "ERR¤Method¤Unsupported command\n";
                         toClient.write(response.getBytes("UTF-8"));
