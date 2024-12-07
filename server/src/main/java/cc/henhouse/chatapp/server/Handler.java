@@ -40,7 +40,7 @@ public class Handler {
             }
 
             userMap.put(username, toClient);
-            broadcastMessage(messageList, "Join", username + " has joined the chat!");
+            broadcastMessage(messageList, "Server", username + " has joined the chat!");
 
             while ((line = fromClient.readLine()) != null) {
                 System.out.println("line: " + line);
@@ -49,7 +49,7 @@ public class Handler {
                 for (String part : parts) System.out.println(part);
                 switch (parts[0]) {
                     case "MessageAll":
-                        messageList.add(new String[] {username, parts[1]});
+                        broadcastMessage(messageList, username, parts[1]);
                         break;
 
                     case "MessageIndividual":
@@ -62,7 +62,7 @@ public class Handler {
 
                     case "Leave":
                         userMap.remove(username);
-                        broadcastMessage(messageList, "Leave", username + " has left the chat.");
+                        broadcastMessage(messageList, "Server", username + " has left the chat.");
                         break;
 
                     default:
@@ -78,8 +78,8 @@ public class Handler {
         }
     }
 
-    private void broadcastMessage(Vector<String[]> messageList, String type, String message) {
-        messageList.add(new String[] {type, message});
+    private void broadcastMessage(Vector<String[]> messageList, String sender, String message) {
+        messageList.add(new String[] {sender, message});
     }
 
     private void sendPrivateMessage(
