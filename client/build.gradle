@@ -3,6 +3,16 @@ plugins {
     id 'application'
 }
 
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+    testImplementation 'org.mockito:mockito-core:5.4.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.4.0'
+}
+
 application {
     mainClass = 'cc.henhouse.chatapp.client.ChatScreen'
 }
@@ -15,8 +25,11 @@ jar {
     }
 }
 
-dependencies {
-    // Add any required dependencies here
-    // testImplementation 'org.junit.jupiter:junit-jupiter:5.9.3'
-}
+test {
+    useJUnitPlatform()
 
+    reports {
+        junitXml.enabled = true
+        html.enabled = true
+    }
+}
