@@ -11,4 +11,4 @@ plugins {
 }
 
 rootProject.name = 'chatapp'
-include('server', 'client')
+include 'server', 'client'
