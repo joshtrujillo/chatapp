@@ -12,6 +12,15 @@ ChatApp is a simple Java-based chatroom application using TCP sockets. It suppor
 - Gradle (for building the project)
 
 ## Usage
+### Build the project
+```bash
+./gradlew build
+```
 ### Run the Server
 ```bash
 ./gradlew :server:run
+```
+### Run the Client
+```bash
+./gradlew :client:run```
+```
