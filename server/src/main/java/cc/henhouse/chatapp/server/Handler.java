@@ -27,14 +27,15 @@ public class Handler {
             String line = fromClient.readLine();
             String[] parts = line.split("¤");
             if (!parts[0].equals("Join") || parts.length < 2) {
-
-                toClient.writeBytes("ERR¤Join¤Invalid join request\n");
+                String response = "ERR¤Join¤Invalid join request\n";
+                toClient.write(response.getBytes("UTF-8"));
                 return;
             }
 
             username = parts[1];
             if (userMap.containsKey(username)) {
-                toClient.writeBytes("ERR¤Join¤Username is not unique");
+                String response = "ERR¤Join¤Username is not unique";
+                toClient.write(response.getBytes("UTF-8"));
                 return;
             }
 
@@ -44,6 +45,8 @@ public class Handler {
             while (true) {
                 line = fromClient.readLine();
                 parts = line.split("¤");
+                System.out.println("Request received:");
+                for (String part : parts) System.out.println(part);
                 switch (parts[0]) {
                     case "MessageAll":
                         messageList.add(new String[] {username, parts[1]});
@@ -63,7 +66,8 @@ public class Handler {
                         break;
 
                     default:
-                        toClient.writeBytes("ERR¤Method¤Unsupported command\n");
+                        String response = "ERR¤Method¤Unsupported command\n";
+                        toClient.write(response.getBytes("UTF-8"));
                 }
             }
         } catch (IOException ioe) {
@@ -85,9 +89,11 @@ public class Handler {
             String message)
             throws IOException {
         if (userMap.containsKey(recipient)) {
-            userMap.get(recipient).writeBytes("MessageIndividual¤" + sender + "¤" + message + "\n");
+            String response = "MessageIndividual¤" + sender + "¤" + message + "\n";
+            userMap.get(recipient).write(response.getBytes("UTF-8"));
         } else {
-            userMap.get(sender).writeBytes("ERR¤Message¤User " + recipient + " not found\n");
+            String response = "ERR¤Message¤User " + recipient + " not found\n";
+            userMap.get(recipient).write(response.getBytes("UTF-8"));
         }
     }
 
@@ -95,6 +101,7 @@ public class Handler {
             String username, ConcurrentHashMap<String, DataOutputStream> userMap)
             throws IOException {
         String users = String.join(",", userMap.keySet());
-        userMap.get(username).writeBytes("OnlineUsers¤" + users + "\n");
+        String response = "OnlineUsers¤" + users + "\n";
+        userMap.get(username).write(response.getBytes("UTF-8"));
     }
 }

@@ -24,14 +24,14 @@ public class BroadcastThread implements Runnable {
             } catch (InterruptedException ignore) {
             }
             if (messageList.isEmpty()) continue;
-
             for (String[] message : messageList) {
                 String protocolMessage =
                         String.format("MessageAll¤%s¤%s\n", message[0], message[1]);
+                System.out.println(protocolMessage);
                 for (String username : userMap.keySet()) {
                     if (username.equals(message[0])) continue; // skip sender
                     try {
-                        userMap.get(username).writeBytes(protocolMessage);
+                        userMap.get(username).write(protocolMessage.getBytes("UTF-8"));
                     } catch (IOException ioe) {
                         System.err.println("Error sending message to " + username);
                     }
