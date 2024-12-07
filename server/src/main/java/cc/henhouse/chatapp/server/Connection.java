@@ -2,17 +2,17 @@ package cc.henhouse.chatapp.server;
 
 import java.io.*;
 import java.net.*;
-import java.util.Vector;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Connection implements Runnable {
     private Socket client;
     private ConcurrentHashMap<String, DataOutputStream> userMap;
-    private Vector<String[]> messageList;
+    private BlockingQueue<String[]> messageList;
     private static Handler handler = new Handler();
 
     public Connection(
-            Vector<String[]> messageList,
+            BlockingQueue<String[]> messageList,
             ConcurrentHashMap<String, DataOutputStream> userMap,
             Socket client) {
         this.client = client;

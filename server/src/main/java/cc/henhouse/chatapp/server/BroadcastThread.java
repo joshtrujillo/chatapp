@@ -2,16 +2,17 @@ package cc.henhouse.chatapp.server;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.Vector;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class BroadcastThread implements Runnable {
 
-    private Vector<String[]> messageList;
+    private BlockingQueue<String[]> messageList;
     private ConcurrentHashMap<String, DataOutputStream> userMap;
 
     public BroadcastThread(
-            Vector<String[]> messageList, ConcurrentHashMap<String, DataOutputStream> userMap) {
+            BlockingQueue<String[]> messageList,
+            ConcurrentHashMap<String, DataOutputStream> userMap) {
         this.messageList = messageList;
         this.userMap = userMap;
     }

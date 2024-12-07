@@ -2,7 +2,7 @@ package cc.henhouse.chatapp.server;
 
 import java.io.*;
 import java.net.*;
-import java.util.Vector;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Handler {
@@ -10,7 +10,7 @@ public class Handler {
      * this method is invoked by a separate thread
      */
     public void process(
-            Vector<String[]> messageList,
+            BlockingQueue<String[]> messageList,
             ConcurrentHashMap<String, DataOutputStream> userMap,
             Socket client)
             throws java.io.IOException {
@@ -71,8 +71,13 @@ public class Handler {
         }
     }
 
-    private void broadcastMessage(Vector<String[]> messageList, String sender, String message) {
-        messageList.add(new String[] {sender, message});
+    private void broadcastMessage(
+            BlockingQueue<String[]> messageList, String sender, String message) {
+        try {
+            messageList.put(new String[] {sender, message});
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+        }
     }
 
     private void sendPrivateMessage(

@@ -7,7 +7,6 @@ package cc.henhouse.chatapp.server;
 
 import java.io.*;
 import java.net.*;
-import java.util.Vector;
 import java.util.concurrent.*;
 
 public class Server {
@@ -19,7 +18,7 @@ public class Server {
     // shared resources fro all threads
     private static final ConcurrentHashMap<String, DataOutputStream> userMap =
             new ConcurrentHashMap<>();
-    private static final Vector<String[]> messageList = new Vector<>();
+    private static final BlockingQueue<String[]> messageList = new LinkedBlockingQueue<>();
 
     public static void main(String[] args) throws IOException {
         ServerSocket sock = null;
