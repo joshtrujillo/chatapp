@@ -40,10 +40,7 @@ public class Handler {
             broadcastMessage(messageList, "Server", username + " has joined the chat!");
 
             while ((line = fromClient.readLine()) != null) {
-                System.out.println("line: " + line);
                 parts = line.split("¤");
-                System.out.println("Request received:");
-                for (String part : parts) System.out.println(part);
                 switch (parts[0]) {
                     case "MessageAll":
                         broadcastMessage(messageList, username, parts[1]);

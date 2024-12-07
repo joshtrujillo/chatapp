@@ -28,7 +28,6 @@ public class BroadcastThread implements Runnable {
             for (String[] message : messageList) {
                 String protocolMessage =
                         String.format("MessageAll¤%s¤%s\n", message[0], message[1]);
-                System.out.println(protocolMessage);
                 for (String username : userMap.keySet()) {
                     if (username.equals(message[0])) continue; // skip sender
                     try {
