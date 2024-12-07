@@ -24,8 +24,8 @@ public class BroadcastThread implements Runnable {
     /**
      * BroadcastThread constructor.
      *
-     * @params messageList The shared list of broadcast messages to be sent.
-     * @params userMap The shared map of usernames to their output streams.
+     * @param messageList The shared list of broadcast messages to be sent.
+     * @param userMap The shared map of usernames to their output streams.
      */
     public BroadcastThread(
             BlockingQueue<String[]> messageList,
