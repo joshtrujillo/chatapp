@@ -1,4 +1,11 @@
-/** Usage: java ChatScreen */
+/**
+ * The ChatScreen class is the main class for the chatapp client.
+ *
+ * <p>JFrame UI shows user relevent information. Creates a ReaderThread to receive incoming server
+ * responses.
+ *
+ * @author Josh Trujillo
+ */
 package cc.henhouse.chatapp.client;
 
 import java.awt.*;
@@ -78,10 +85,24 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener {
         toServer = new DataOutputStream(server.getOutputStream());
     }
 
+    /**
+     * Sets the users username.
+     *
+     * @param username The user's username.
+     */
     public void setUsername(String username) {
         this.username = username;
     }
 
+    /**
+     * Validates the user's username.
+     *
+     * <p>Username can only be letters, numbers, and underscores. The username must also be unique
+     * from other online users.
+     *
+     * @param username User's username to be validated.
+     * @return Boolean Is the username valid or not?
+     */
     private boolean validateUsername(String username) {
         String usernameRegex = "^[a-zA-Z0-9_]+$";
         if (!Pattern.matches(usernameRegex, username)) {
@@ -92,6 +113,7 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener {
         return true;
     }
 
+    /** Prompts the user for a new username if the previously entered username is not unique. */
     public void handleInvalidUsername() {
         SwingUtilities.invokeLater(
                 () -> {
@@ -106,21 +128,25 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener {
                 });
     }
 
-    /* Displays a message */
+    /** Displays a message on the ChatScreen. */
     public void displayMessage(String message) {
         displayArea.append(message + "\n");
     }
 
-    /* This gets the text the user entered and outputs it in the display area. */
+    /** This gets the text the user entered and outputs it in the display area. */
     public void displayText() {
         String message = sendText.getText().trim();
-
-        displayArea.append(message + "\n");
-
+        displayMessage(message);
         sendText.setText("");
         sendText.requestFocusInWindow();
     }
 
+    /**
+     * Helper for sending messages.
+     *
+     * <p>Determinds whether to send a private message or broadcast messages based on the
+     * recipientText field.
+     */
     private void sendMessage() {
         String message = sendText.getText().trim();
         String recipient = recipientText.getText().trim();
@@ -135,6 +161,11 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener {
         sendText.requestFocusInWindow();
     }
 
+    /**
+     * Sends a broadcast message to the server.
+     *
+     * @param message The message to be sent.
+     */
     public void sendMessageAll(String message) {
         try {
             String request = "MessageAll¤" + message + "\n";
@@ -145,6 +176,12 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener {
         }
     }
 
+    /**
+     * Sends a private message to a recipient.
+     *
+     * @param recipient The recipient.
+     * @param message The message to be sent.
+     */
     public void sendPrivateMessage(String recipient, String message) {
         try {
             if (!message.isEmpty()) {
@@ -159,6 +196,11 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener {
         }
     }
 
+    /**
+     * Requests a list of online users from the server.
+     *
+     * <p>The response is handled by the ReaderThread.
+     */
     public void viewOnlineUsers() {
         try {
             String request = "viewOnlineUsers¤\n";
@@ -168,6 +210,14 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener {
         }
     }
 
+    /**
+     * Tells the server the client is joining.
+     *
+     * <p>The username is validated by helper methods and the user is prompted for a new username if
+     * needed.
+     *
+     * @param username The username to join the chat room with.
+     */
     public void sendJoinMessage(String username) {
         try {
             if (!validateUsername(username)) {
@@ -181,6 +231,11 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener {
         }
     }
 
+    /**
+     * Tells the server the client is leaving.
+     *
+     * <p>The server notifies other users of this users departure.
+     */
     public void sendLeaveMessage() {
         try {
             String request = "Leave\n";
@@ -190,7 +245,7 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener {
         }
     }
 
-    /*
+    /**
      * This method responds to action events .... i.e. button clicks and fulfills the contract of
      * the ActionListener interface.
      */
@@ -207,12 +262,7 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener {
         }
     }
 
-    /*
-     * These methods responds to keystroke events and fulfills the contract of the KeyListener
-     * interface.
-     */
-
-    /* This is invoked when the user presses the ENTER key. */
+    /** Invoked when the user presses the ENTER key. Calls the sendMessage helper. */
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ENTER) sendMessage();
     }
@@ -237,7 +287,6 @@ public class ChatScreen extends JFrame implements ActionListener, KeyListener {
             } else {
                 System.exit(0); // Exit if no username is provided
             }
-
             Thread readerThread = new Thread(new ReaderThread(server, win));
             readerThread.start();
         } catch (UnknownHostException uhe) {

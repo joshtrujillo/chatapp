@@ -1,3 +1,11 @@
+/**
+ * The MessageParser class handles parsing the incoming server responses. It splits responses by
+ * delimiter and uses a switch statement for control.
+ *
+ * <p>This class directly displays the user destined output to the ChatScreen.
+ *
+ * @author Josh Trujillo
+ */
 package cc.henhouse.chatapp.client;
 
 public class MessageParser {

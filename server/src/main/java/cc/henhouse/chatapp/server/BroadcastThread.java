@@ -1,3 +1,12 @@
+/**
+ * The BroadcastThread class handles broadcasting messages to all connected clients. It continuously
+ * retrieves messages from a shared queue and sends them to all users except the sender.
+ *
+ * <p>Thread-Safe Design: This class uses a BlockingQueue to ensure thread safety when accessing and
+ * processing messages concurrently.
+ *
+ * @author Josh Trujillo
+ */
 package cc.henhouse.chatapp.server;
 
 import java.io.DataOutputStream;
@@ -7,9 +16,17 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class BroadcastThread implements Runnable {
 
+    // The shared messageList for concurrent accesss.
     private BlockingQueue<String[]> messageList;
+    // The shared map of usernames to their output streams for concurrent access.
     private ConcurrentHashMap<String, DataOutputStream> userMap;
 
+    /**
+     * BroadcastThread constructor.
+     *
+     * @params messageList The shared list of broadcast messages to be sent.
+     * @params userMap The shared map of usernames to their output streams.
+     */
     public BroadcastThread(
             BlockingQueue<String[]> messageList,
             ConcurrentHashMap<String, DataOutputStream> userMap) {
@@ -17,6 +34,10 @@ public class BroadcastThread implements Runnable {
         this.userMap = userMap;
     }
 
+    /**
+     * Checks the messageList every 1/10 of a second. Sends the message to all online clients except
+     * for the sender.
+     */
     public void run() {
         while (true) {
             // sleep for 1/10th of a second

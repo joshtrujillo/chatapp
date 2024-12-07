@@ -1,3 +1,11 @@
+/**
+ * The Connection class allows for each client connection to be serviced in its own thread.
+ *
+ * <p>Thread-safe: This class uses a shared BlockingQueue and ConcurrentHashMap to ensure thread
+ * safety when accessing and processing messages concurrently.
+ *
+ * @author Josh Trujillo
+ */
 package cc.henhouse.chatapp.server;
 
 import java.io.*;
