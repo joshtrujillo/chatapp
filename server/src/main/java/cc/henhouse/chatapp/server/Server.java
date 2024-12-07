@@ -30,6 +30,8 @@ public class Server {
 
             while (true) {
                 /** now listen for connections and service the connection in a separate thread. */
+                Runnable broadcastThread = new BroadcastThread(messageList, userMap);
+                exec.execute(broadcastThread);
                 Runnable task = new Connection(messageList, userMap, sock.accept());
                 exec.execute(task);
             }
