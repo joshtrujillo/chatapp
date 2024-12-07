@@ -43,24 +43,33 @@ class ChatScreenTest {
     }
 
     @Test
-    void testSendJoinMessage() throws IOException {
-        chatScreen.sendJoinMessage("Alice");
-        verify(mockOutput).write("Join¤Alice\n".getBytes("UTF-8"));
-    }
-
-    @Test
     void testSendLeaveMessage() throws IOException {
         chatScreen.sendLeaveMessage();
         verify(mockOutput).write("Leave\n".getBytes("UTF-8"));
     }
 
     @Test
-    void testInvalidUsername() {
-        Assertions.assertFalse(chatScreen.validateUsername("Invalid Username!"));
+    void testSendJoinMessage_ValidUsername() throws IOException {
+        // Valid username
+        chatScreen.sendJoinMessage("Alice");
+
+        // Verify the server receives the join message
+        verify(mockOutput).write("Join¤Alice\n".getBytes("UTF-8"));
     }
 
     @Test
-    void testValidUsername() {
-        Assertions.assertTrue(chatScreen.validateUsername("Valid_Username123"));
+    void testSendJoinMessage_InvalidUsername() {
+        // Invalid username
+        Exception exception =
+                assertThrows(
+                        IllegalArgumentException.class,
+                        () -> {
+                            chatScreen.sendJoinMessage("Invalid Username!");
+                        });
+
+        // Verify the exception message
+        assertEquals(
+                "Username must only contain letters, numbers, and underscores",
+                exception.getMessage());
     }
 }
