@@ -16,6 +16,11 @@ public class Server {
     // construct a thread pool for concurrency
     private static final Executor exec = Executors.newCachedThreadPool();
 
+    // shared resources fro all threads
+    private static final ConcurrentHashMap<String, DataOutputStream> userMap =
+            new ConcurrentHashMap<>();
+    private static final Vector<String[]> messageList = new Vector<>();
+
     public static void main(String[] args) throws IOException {
         ServerSocket sock = null;
 
@@ -25,9 +30,6 @@ public class Server {
 
             while (true) {
                 /** now listen for connections and service the connection in a separate thread. */
-                ConcurrentHashMap<String, DataOutputStream> userMap = new ConcurrentHashMap<>();
-                Vector<String[]> messageList = new Vector<>();
-
                 Runnable task = new Connection(messageList, userMap, sock.accept());
                 exec.execute(task);
             }
