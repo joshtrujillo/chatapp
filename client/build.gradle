@@ -7,6 +7,14 @@ application {
     mainClass = 'cc.henhouse.chatapp.client.ChatScreen'
 }
 
+jar {
+    manifest {
+        attributes(
+            'Main-Class': 'cc.henhouse.chatapp.client.ChatScreen'
+        )
+    }
+}
+
 dependencies {
     // Add any required dependencies here
     // testImplementation 'org.junit.jupiter:junit-jupiter:5.9.3'
