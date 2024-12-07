@@ -42,8 +42,8 @@ public class Handler {
             userMap.put(username, toClient);
             broadcastMessage(messageList, "Join", username + " has joined the chat!");
 
-            while (true) {
-                line = fromClient.readLine();
+            while ((line = fromClient.readLine()) != null) {
+                System.out.println("line: " + line);
                 parts = line.split("¤");
                 System.out.println("Request received:");
                 for (String part : parts) System.out.println(part);
