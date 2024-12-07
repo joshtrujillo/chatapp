@@ -1,9 +1,11 @@
 package cc.henhouse.chatapp.client;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.*;
 import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.*;
-import org.mockito.*;
 
 import java.io.*;
 import java.net.*;
