@@ -24,5 +24,5 @@ ChatApp is a simple Java-based chatroom application using TCP sockets. It suppor
 ```
 ### Run the Client
 ```bash
-./gradlew :client:run <server-ip>
+./gradlew :client:run --args='<server-ip>'
 ```
